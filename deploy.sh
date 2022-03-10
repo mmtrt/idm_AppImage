@@ -32,11 +32,8 @@ wget -q "https://mirror2.internetdownloadmanager.com/$stable_ver.exe"
 # Install app in WINEPREFIX
 ./wine-stable.AppImage "$stable_ver.exe" /skipdlgs ; sleep 5 ; killall wineserver || true
 
-# log files
-ls -al ; ls -al "$WINEPREFIX/drive_c/Program Files/Internet Download Manager/"
-
 (cd "$WINEPREFIX/drive_c/Program Files/Internet Download Manager/" ; mv IDMIntegrator64.exe IDMIntegrator64.exe.bak ; mv IEMonitor.exe IEMonitor.exe.bak)
-mv "$WINEPREFIX/drive_c/Program Files/Internet Download Manager" idm-stable/usr/share/idm
+mkdir -p "idm-stable/usr/share" ; mv "$WINEPREFIX/drive_c/Program Files/Internet Download Manager" idm-stable/usr/share/idm
 find "idm-stable/usr" -type d -execdir chmod 755 {} +
 rm -rf "$WINEPREFIX" "*.exe"
 
