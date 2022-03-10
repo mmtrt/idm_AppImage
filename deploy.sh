@@ -24,19 +24,20 @@ wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/continuous-stab
 chmod +x *.AppImage ; mv wine-stable_${WINE_VER}-x86_64.AppImage wine-stable.AppImage
 
 # idm stable
-stable_ver=$(wget https://www.internetdownloadmanager.com/download.html -qO- 2>&1 | grep -Po '=id.*[0-9]' | sed -r 's|=||')
+stable_ver=$(wget "https://www.internetdownloadmanager.com/download.html" -qO- 2>&1 | grep -Po '=id.*[0-9]' | sed -r 's|=||')
+stable_vers=$(wget "https://www.internetdownloadmanager.com/download.html" -qO- 2>&1 | grep -Po '=id.*[0-9]' | sed -r 's|=idman||;s|b|B|;s/./&./1;s/./&_/4;s/./&_/10')
+
 wget -q "https://mirror2.internetdownloadmanager.com/$stable_ver.exe?v=lt&filename=$stable_ver.exe"
 
 # Install app in WINEPREFIX
-./wine-stable.AppImage "$stable_ver.exe" /skipdlgs; sleep 5
+./wine-stable.AppImage "$stable_ver.exe" /skipdlgs ; killall wineserver || true
 
-(cd $WINEPREFIX/drive_c/Program Files/Internet Download Manager/ ; mv IDMIntegrator64.exe IDMIntegrator64.exe.bak ; mv IEMonitor.exe IEMonitor.exe.bak)
-
+(cd "$WINEPREFIX/drive_c/Program Files/Internet Download Manager/" ; mv IDMIntegrator64.exe IDMIntegrator64.exe.bak ; mv IEMonitor.exe IEMonitor.exe.bak)
 mv "$WINEPREFIX/drive_c/Program Files/Internet Download Manager" idm-stable/usr/share/idm
 find "idm-stable/usr" -type d -execdir chmod 755 {} +
 rm -rf "$WINEPREFIX" "*.exe"
 
-cp idm.desktop idm-stable ; cp AppRun idm-stable ; sed -i -e 's|progVer=|progVer='"$stable_ver"'|g' idm-stable/AppRun
+cp idm.desktop idm-stable ; cp AppRun idm-stable ; sed -i -e 's|progVer=|progVer='"$stable_vers"'|g' idm-stable/AppRun
 
 cp -r icons idm-stable/usr/share ; cp idm.png idm-stable
 
