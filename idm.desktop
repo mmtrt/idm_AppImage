@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Internet Download Manager
+GenericName=Download Manager
+Type=Application
+Terminal=false
+Icon=idm
+Exec=AppRun
+StartupWMClass=IDMan.exe
+Categories=Network;
