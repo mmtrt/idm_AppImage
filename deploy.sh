@@ -41,7 +41,7 @@ cp idm.desktop idm-stable ; cp AppRun idm-stable ; sed -i -e 's|progVer=|progVer
 
 cp -r icons idm-stable/usr/share ; cp idm.png idm-stable
 
-export ARCH=x86_64; squashfs-root/AppRun -v ./idm-stable -n -u "gh-releases-zsync|mmtrt|idm_AppImage|stable|idm*.AppImage.zsync" idm_${stable_ver}-${ARCH}.AppImage &>/dev/null
+export ARCH=x86_64; squashfs-root/AppRun -v ./idm-stable -n -u "gh-releases-zsync|mmtrt|idm_AppImage|stable|idm*.AppImage.zsync" idm_${stable_vers}-${ARCH}.AppImage &>/dev/null
 
 }
 
@@ -59,7 +59,7 @@ cp -Rp $WINEPREFIX idm-stable/ ; rm -rf $WINEPREFIX ; rm ./*.AppImage
 
 #( cd idm-stable ; wget -qO- 'https://gist.github.com/mmtrt/0a0712cbae05b2e3dc2aac338fcf95eb/raw/b3cddb7fba032796b1d347cd032664b53ec9d74c/idmw.patch' | patch -p1 )
 
-export ARCH=x86_64; squashfs-root/AppRun -v ./idm-stable -n -u "gh-releases-zsync|mmtrt|idm_AppImage|stable-wp|idm*WP*.AppImage.zsync" idm_${stable_ver}_WP-${ARCH}.AppImage &>/dev/null
+export ARCH=x86_64; squashfs-root/AppRun -v ./idm-stable -n -u "gh-releases-zsync|mmtrt|idm_AppImage|stable-wp|idm*WP*.AppImage.zsync" idm_${stable_vers}_WP-${ARCH}.AppImage &>/dev/null
 
 }
 
