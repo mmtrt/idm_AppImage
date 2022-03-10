@@ -96,7 +96,6 @@ EOF
 wine regedit $progReg
 sleep 1
 rm $progReg &>/dev/null
-fi
 
 fi
 
