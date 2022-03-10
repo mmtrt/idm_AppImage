@@ -17,11 +17,6 @@ find -L "$progHome" -maxdepth 2 -type l -delete
 # Update existing symlinks, add new symlinks
 cp -urs "$progRealPath/"* "$progHome" 2> /dev/null
 
-# Patch wineprefix system.reg to remove idm integration nags
-if [[ $(grep -c -s '"AdvIntDriverEnabled2"=dword:00000001' $WINEPREFIX/system.reg) -eq 1 ]];then
-  sed -i 's|"AdvIntDriverEnabled2"=dword:00000001|"AdvIntDriverEnabled2"=dword:00000000|' "$WINEPREFIX/system.reg"
-fi
-
 dkico() {
 if [[ ! -f $progIcoD ]]; then
 
@@ -85,6 +80,11 @@ fi
 
 # Create custom $WINEPREFIX and add $WINEDLLOVERRIDES
 export WINEPREFIX="${progHome}/.wine" WINEDLLOVERRIDES="mscoree,mshtml=" WINEDEBUG=fixme-all WINEARCH=win32
+
+# Patch wineprefix system.reg to remove idm integration nags
+if [[ $(grep -c -s '"AdvIntDriverEnabled2"=dword:00000001' $WINEPREFIX/system.reg) -eq 1 ]];then
+  sed -i 's|"AdvIntDriverEnabled2"=dword:00000001|"AdvIntDriverEnabled2"=dword:00000000|' "$WINEPREFIX/system.reg"
+fi
 
 if [[ ! -d $WINEPREFIX ]]; then
 
