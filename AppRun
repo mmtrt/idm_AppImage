@@ -9,6 +9,7 @@ progRealPath="$HERE/usr/share/$progName"
 progHome="$HOME/.$progName"
 progBin="IDMan.exe"
 progIcoD="$HOME/.local/share/applications/$progName.desktop"
+progReg="/tmp/$progName.reg"
 
 # Symlink stuff
 mkdir -p "$progHome" || exit 1
@@ -16,11 +17,6 @@ mkdir -p "$progHome" || exit 1
 find -L "$progHome" -maxdepth 2 -type l -delete
 # Update existing symlinks, add new symlinks
 cp -urs "$progRealPath/"* "$progHome" 2> /dev/null
-
-# Patch wineprefix system.reg to remove idm integration nags
-if [[ $(grep -c -s '"AdvIntDriverEnabled2"=dword:00000001' $WINEPREFIX/system.reg) -eq 1 ]];then
-  sed -i 's|"AdvIntDriverEnabled2"=dword:00000001|"AdvIntDriverEnabled2"=dword:00000000|' "$WINEPREFIX/system.reg"
-fi
 
 dkico() {
 if [[ ! -f $progIcoD ]]; then
@@ -91,6 +87,15 @@ if [[ ! -d $WINEPREFIX ]]; then
 # link ttf & ttc fonts from root to wineprefix
 mkdir -p "$WINEPREFIX"/drive_c/windows/Fonts
 find /usr/share/fonts/ -type f \( -name "*.ttf" -o -name "*.ttc" \) -exec ln -vs "{}" "$WINEPREFIX"/drive_c/windows/Fonts/ \; &>/dev/null
+cat > $progReg <<'EOF'
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\Software\Internet Download Manager]
+"AdvIntDriverEnabled2"=dword:00000000
+EOF
+wine regedit $progReg
+sleep 1
+rm $progReg &>/dev/null
 
 fi
 
