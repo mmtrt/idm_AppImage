@@ -36,7 +36,7 @@ Exec=${OWD}/${progName}_${progVer}${progArch}.AppImage %F
 Categories=Network;
 Terminal=false
 StartupWMClass=$progBin
-Keywords=idm,download
+Keywords=idm,download"
 } >> "$DesktopFilePath"
 
 fi
