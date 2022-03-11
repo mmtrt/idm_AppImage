@@ -49,8 +49,15 @@ idmswp () {
 
 idms ; rm ./idm*AppImage*
 
+export WINEDLLOVERRIDES="mscoree,mshtml="
+export WINEARCH="win32"
+export WINEPREFIX="/home/runner/.wine"
+export WINEDEBUG="-all"
+
 # Create WINEPREFIX
 ./wine-stable.AppImage ; sleep 5 ; killall wineserver || true
+
+ls -al
 
 # Removing any existing user data
 ( cd "$WINEPREFIX" ; rm -rf users ) || true
