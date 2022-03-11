@@ -49,7 +49,7 @@ idmswp () {
 
 idms ; rm ./idm*AppImage*
 
-wget -q "https://gist.github.com/mmtrt/895168bd77a0a68be19788734fb31870/raw/c28bd06be564dd430120e28da4259821b8709d71/idm.reg"
+wget -q "https://gist.github.com/mmtrt/895168bd77a0a68be19788734fb31870/raw/f119ce7f5469e9f0fd0bbfa908c4c39d721187ff/idm.reg"
 
 # Create WINEPREFIX
 ./wine-stable.AppImage wineboot ; sleep 5
@@ -62,7 +62,7 @@ wget -q "https://gist.github.com/mmtrt/895168bd77a0a68be19788734fb31870/raw/c28b
 
 cp -Rp $WINEPREFIX idm-stable/ ; rm -rf $WINEPREFIX ; rm ./*.AppImage
 
-( cd idm-stable ; wget -qO- 'https://gist.github.com/mmtrt/5421abd5b5c22af6891f1f14489ae656/raw/7304ec0e3116a63c4bd9de8728bc035dd625fc5e/idmwp.patch' | patch -p1 )
+( cp AppRun idm-stable ; cd idm-stable ; wget -qO- 'https://gist.github.com/mmtrt/5421abd5b5c22af6891f1f14489ae656/raw/7304ec0e3116a63c4bd9de8728bc035dd625fc5e/idmwp.patch' | patch -p1 ; sed -i -e 's|progVer=|progVer='"$stable_vers"'|g' AppRun )
 
 export ARCH=x86_64; squashfs-root/AppRun -v ./idm-stable -n -u "gh-releases-zsync|mmtrt|idm_AppImage|stable-wp|idm*WP*.AppImage.zsync" idm_${stable_vers}_WP-${ARCH}.AppImage &>/dev/null
 
