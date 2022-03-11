@@ -96,6 +96,11 @@ Windows Registry Editor Version 5.00
 "LaunchOnStart"=dword:00000000
 "TipFilePos"=dword:000001b9
 "TipStartUp"=dword:00000001
+
+[HKEY_CLASSES_ROOT\folder\shell\open\command]
+@="\"C:\\windows\\system32\\winebrowser.exe\" -nohome \"%1\""
+
+[-HKEY_CLASSES_ROOT\folder\shell\open\ddeexec]
 EOF
 wine regedit $progReg
 sleep 1
