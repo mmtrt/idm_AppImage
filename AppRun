@@ -90,8 +90,12 @@ find /usr/share/fonts/ -type f \( -name "*.ttf" -o -name "*.ttc" \) -exec ln -vs
 cat > $progReg <<'EOF'
 Windows Registry Editor Version 5.00
 
-[HKEY_LOCAL_MACHINE\Software\Internet Download Manager]
-"AdvIntDriverEnabled2"=dword:00000000
+[HKEY_CURRENT_USER\Software\DownloadManager]
+"RunIEMonitor"=dword:00000000
+"StEnableBFEMsg"=dword:00000000
+"LaunchOnStart"=dword:00000000
+"TipFilePos"=dword:000001b9
+"TipStartUp"=dword:00000001
 EOF
 wine regedit $progReg
 sleep 1
