@@ -54,6 +54,8 @@ export WINEARCH="win32"
 export WINEPREFIX="/home/runner/.wine"
 export WINEDEBUG="-all"
 
+ls -al
+
 # Create WINEPREFIX
 ./wine-stable.AppImage ; sleep 5 ; killall wineserver || true
 
