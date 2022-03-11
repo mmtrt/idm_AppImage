@@ -57,7 +57,7 @@ export WINEDEBUG="-all"
 ls -al
 
 # Create WINEPREFIX
-./wine-stable.AppImage ; sleep 5 ; killall wineserver || true
+./wine-stable.AppImage wineboot; sleep 5
 
 ls -al
 
