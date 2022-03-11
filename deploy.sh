@@ -55,7 +55,7 @@ wget -q "https://gist.github.com/mmtrt/895168bd77a0a68be19788734fb31870/raw/c28b
 ./wine-stable.AppImage wineboot ; sleep 5
 ./wine-stable.AppImage regedit idm.reg ; sleep 1 ; rm *.reg
 
-(cp -Rp idm-stable/usr/share/idm test ; ./wine-stable.AppImage test/IDMan.exe ; sleep 5 ; killall IDMan.exe ; rm -rf ./test)
+(cp -Rp idm-stable/usr/share/idm test ; ./wine-stable.AppImage test/IDMan.exe &; sleep 5 ; killall IDMan.exe ; rm -rf ./test)
 
 # Removing any existing user data
 ( cd "$WINEPREFIX" ; rm -rf users ) || true
