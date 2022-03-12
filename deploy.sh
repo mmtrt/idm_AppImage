@@ -62,7 +62,7 @@ wget -q "https://gist.github.com/mmtrt/895168bd77a0a68be19788734fb31870/raw/f119
 
 cp -Rp $WINEPREFIX idm-stable/ ; rm -rf $WINEPREFIX ; rm ./*.AppImage
 
-( cp AppRun idm-stable ; cd idm-stable ; wget -qO- 'https://gist.github.com/mmtrt/5421abd5b5c22af6891f1f14489ae656/raw/1687f63ccf7f4c7fd4876409ad94864db68e2b2d/idmwp.patch' | patch -p1 ; sed -i -e 's|progVer=|progVer='"$stable_vers"'|g' AppRun )
+( cp AppRun idm-stable ; cd idm-stable ; wget -qO- 'https://gist.github.com/mmtrt/5421abd5b5c22af6891f1f14489ae656/raw/ff756edb0913df568d55c216ef9889060018ca45/idmwp.patch' | patch -p1 ; sed -i -e 's|progVer=|progVer='"$stable_vers"'|g' AppRun )
 
 export ARCH=x86_64; squashfs-root/AppRun -v ./idm-stable -n -u "gh-releases-zsync|mmtrt|idm_AppImage|stable-wp|idm*WP*.AppImage.zsync" idm_${stable_vers}_WP-${ARCH}.AppImage &>/dev/null
 
