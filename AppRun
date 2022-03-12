@@ -108,16 +108,6 @@ rm $progReg &>/dev/null
 
 fi
 
-# Passing args to wine apps
-for i; do # for i = for i in "$@"
-    # Add path in Wine form (e.g. "z:/home/user/Desktop/lol.xyz")
-    if [[ -f /${i#?:} ]]; then 
-        args+=("z:${i#?:}")   # When opened through .desktop or Wine path (e.g. z:/*)
-    elif [[ "${i:0:1}" = "-" ]]; then
-        args+=("${i/#-//}")
-    fi
-done
-
 # Launch wineboot/winecfg/winetricks if requested.
 # If the executable exists then launch it.
 case "$1" in
@@ -131,6 +121,6 @@ case "$1" in
     wine "$1"
     ;;
   *)
-    wine "$progHome/$progBin" "${args[@]}" 2>/dev/null
+    wine "$progHome/$progBin" "$1" "$2" 2>/dev/null
     ;;
 esac
