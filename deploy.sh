@@ -25,7 +25,7 @@ chmod +x *.AppImage ; mv wine-stable_${WINE_VER}-x86_64.AppImage wine-stable.App
 
 # idm stable
 stable_ver=$(wget "https://www.internetdownloadmanager.com/download.html" -qO- 2>&1 | grep -Po '=id.*[0-9]' | sed -r 's|=||')
-stable_vers=$(wget "https://www.internetdownloadmanager.com/download.html" -qO- 2>&1 | grep -Po '=id.*[0-9]' | sed -r 's|=idman||;s|b|B|;s/./&./1;s/./&_/4;s/./&_/10')
+stable_vers=$(wget "https://www.internetdownloadmanager.com/download.html" -qO- 2>&1 | grep -Po '=id.*[0-9]' | sed -r 's|=idman||;s|build||;s/./&./1;s/./&./4;s/./&./10')
 
 wget -q "https://mirror2.internetdownloadmanager.com/$stable_ver.exe"
 
