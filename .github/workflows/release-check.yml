@@ -1,0 +1,26 @@
+name: check
+
+on:
+  schedule:
+  - cron: "0 */12 * * *"
+
+jobs:
+  new-release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.PAT }}
+    - name: get-latest-version
+      run: |
+        VERSION="$(wget "https://www.internetdownloadmanager.com/download.html" -qO- 2>&1 | grep -Po '=id.*[0-9]' | sed -r 's|=idman||;s|build||;s/./&./1;s/./&./4;s/./&./10')"
+        last=$(tail -n1 .build | awk '{print $4}')
+
+        if [ "$last" != "$VERSION" ]; then
+          echo "$(date -u --rfc-3339=seconds | cut -d'+' -f1) Version $VERSION" >> .build
+        fi
+    - uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: Trigger build for new version
+        branch: main
