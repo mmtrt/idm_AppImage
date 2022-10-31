@@ -68,7 +68,7 @@ cp idm.png AppDir/usr/share/icons ; cp idm.png AppDir
 ./wine-stable.AppImage "$stable_ver.exe" /skipdlgs ; sleep 5 ; killall wineserver || true
 
 (cd "$WINEPREFIX/drive_c/Program Files/Internet Download Manager/" ; mv IDMIntegrator64.exe IDMIntegrator64.exe.bak ; mv IEMonitor.exe IEMonitor.exe.bak)
-mv "$WINEPREFIX/drive_c/Program Files/Internet Download Manager" "Appdir/usr/share/idm"
+mv "AppDir/winedata/.wine/drive_c/Program Files/Internet Download Manager" "Appdir/usr/share/idm"
 find "AppDir/usr/share/idm" -type d -execdir chmod 755 {} +
 
 # Apply registry
