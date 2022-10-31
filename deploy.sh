@@ -81,8 +81,6 @@ find "AppDir/usr/share/idm" -type d -execdir chmod 755 {} +
 # Removing any existing user data
 ( cd "$WINEPREFIX" ; rm -rf users ) || true
 
-mv AppDir/winedata/resources AppDir/winedata/.wine/drive_c/windows
-
 echo "disabled" > $WINEPREFIX/.update-timestamp
 
 sed -i "8d" idm.yml
