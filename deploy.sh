@@ -79,6 +79,8 @@ find "AppDir/usr/share/idm" -type d -execdir chmod 755 {} +
 # Removing any existing user data
 ( cd "$WINEPREFIX" ; rm -rf users ) || true
 
+echo "disabled" > $WINEPREFIX/.update-timestamp
+
 sed -i 's/stable|/stable-wp|/' idm.yml
 
 ./builder --recipe idm.yml
