@@ -74,7 +74,7 @@ find "AppDir/usr/share/idm" -type d -execdir chmod 755 {} +
 # Apply registry
 ./wine-stable.AppImage regedit idm.reg ; sleep 1 ; rm *.reg
 
-(cp -Rp AppDir/usr/share/idm test ; ./wine-stable.AppImage test/IDMan.exe & sleep 5 ; killall IDMan.exe ; rm -rf ./test)
+(cp -Rp AppDir/usr/share/idm test ; ./wine-stable.AppImage test/idm/IDMan.exe & sleep 5 ; killall IDMan.exe ; rm -rf ./test)
 
 # Removing any existing user data
 ( cd "$WINEPREFIX" ; rm -rf users ) || true
