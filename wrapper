@@ -100,6 +100,13 @@ Keywords=idm,download"
 fi
 }
 
+atexit ()
+{
+  while pgrep -f "$progHome/$progBin" ; do sleep 1 ; done
+  pkill -f "unionfs-fuse"
+  sleep 1
+  rm -r "$MNT_WINEPREFIX" # "$RW_WINEPREFIX_OVERLAY"
+}
 
 # Launch wineboot/winecfg/winetricks if requested.
 # If the executable exists then launch it.
