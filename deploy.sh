@@ -18,17 +18,19 @@ stable_vers=$(wget "https://www.internetdownloadmanager.com/download.html" -qO- 
 
 wget -q "https://mirror2.internetdownloadmanager.com/$stable_ver.exe"
 
-# Install app in WINEPREFIX
-./wine-stable.AppImage "$stable_ver.exe" /skipdlgs ; sleep 5 ; killall wineserver || true
-
-(cd "$WINEPREFIX/drive_c/Program Files/Internet Download Manager/" ; mv IDMIntegrator64.exe IDMIntegrator64.exe.bak ; mv IEMonitor.exe IEMonitor.exe.bak)
-mkdir -p "AppDir/usr/share/icons" "AppDir/winedata" ; mv "$WINEPREFIX/drive_c/Program Files/Internet Download Manager" AppDir/usr/share/idm
-find "AppDir/usr/share/idm" -type d -execdir chmod 755 {} +
-rm -rf "$WINEPREFIX" "*.exe"
+mkdir -p "AppDir/usr/share/icons" "AppDir/winedata" ;
 
 cp idm.desktop AppDir ; cp wrapper AppDir ; sed -i -e 's|progVer=|progVer='"$stable_vers"'|g' AppDir/wrapper
 
 cp idm.png AppDir/usr/share/icons ; cp idm.png AppDir
+
+# Install app in WINEPREFIX
+./wine-stable.AppImage "$stable_ver.exe" /skipdlgs ; sleep 5 ; killall wineserver || true
+
+(cd "$WINEPREFIX/drive_c/Program Files/Internet Download Manager/" ; mv IDMIntegrator64.exe IDMIntegrator64.exe.bak ; mv IEMonitor.exe IEMonitor.exe.bak)
+mv "$WINEPREFIX/drive_c/Program Files/Internet Download Manager" AppDir/usr/share/idm
+find "AppDir/usr/share/idm" -type d -execdir chmod 755 {} +
+rm -rf "$WINEPREFIX" "*.exe"
 
 ./builder --recipe idm.yml
 
@@ -54,13 +56,19 @@ stable_vers=$(wget "https://www.internetdownloadmanager.com/download.html" -qO- 
 
 wget -q "https://mirror2.internetdownloadmanager.com/$stable_ver.exe"
 
+mkdir -p "AppDir/usr/share/icons" "AppDir/winedata" test
+
+cp idm.desktop AppDir ; mv wrapper AppDir ; sed -i -e 's|progVer=|progVer='"$stable_vers"'|g' AppDir/wrapper
+
+cp idm.png AppDir/usr/share/icons ; cp idm.png AppDir
+
 # Create WINEPREFIX
 ./wine-stable.AppImage wineboot ; sleep 5
 # Install app in WINEPREFIX
 ./wine-stable.AppImage "$stable_ver.exe" /skipdlgs ; sleep 5 ; killall wineserver || true
 
 (cd "$WINEPREFIX/drive_c/Program Files/Internet Download Manager/" ; mv IDMIntegrator64.exe IDMIntegrator64.exe.bak ; mv IEMonitor.exe IEMonitor.exe.bak)
-mkdir -p "AppDir/usr/share/icons" "AppDir/winedata" test ; mv "$WINEPREFIX/drive_c/Program Files/Internet Download Manager" "Appdir/usr/share/idm"
+mv "$WINEPREFIX/drive_c/Program Files/Internet Download Manager" "Appdir/usr/share/idm"
 find "AppDir/usr/share/idm" -type d -execdir chmod 755 {} +
 
 # Apply registry
@@ -70,10 +78,6 @@ find "AppDir/usr/share/idm" -type d -execdir chmod 755 {} +
 
 # Removing any existing user data
 ( cd "$WINEPREFIX" ; rm -rf users ) || true
-
-cp idm.desktop AppDir ; cp wrapper AppDir ; sed -i -e 's|progVer=|progVer='"$stable_vers"'|g' AppDir/wrapper
-
-cp idm.png AppDir/usr/share/icons ; cp idm.png AppDir
 
 sed -i 's/stable|/stable-wp|/' idm.yml
 
