@@ -43,6 +43,8 @@ export WINEARCH="win32"
 export WINEPREFIX="/home/runner/work/idm_AppImage/idm_AppImage/AppDir/winedata/.wine"
 export WINEDEBUG="-all"
 
+wget -q "https://github.com/mmtrt/sommelier-core/raw/tmp/themes/light/light.msstyles" -P $WINEPREFIX/drive_c/windows/resources/themes/light
+
 wget -q "https://gist.github.com/mmtrt/895168bd77a0a68be19788734fb31870/raw/f119ce7f5469e9f0fd0bbfa908c4c39d721187ff/idm.reg"
 
 wget -q "https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.3/appimage-builder-1.0.3-x86_64.AppImage" -O builder ; chmod +x builder
@@ -82,6 +84,8 @@ find "AppDir/usr/share/idm" -type d -execdir chmod 755 {} +
 mv AppDir/winedata/resources AppDir/winedata/.wine/drive_c/windows
 
 echo "disabled" > $WINEPREFIX/.update-timestamp
+
+sed -i "8d" idm.yml
 
 sed -i 's/stable|/stable-wp|/' idm.yml
 
