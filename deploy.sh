@@ -76,8 +76,8 @@ find "AppDir/usr/share/idm" -type d -execdir chmod 755 {} +
 
 (cp -Rp AppDir/usr/share/idm test ; ./wine-stable.AppImage test/IDMan.exe & sleep 5 ; killall IDMan.exe ; rm -rf ./test)
 
-# Removing any existing user data & add theme files
-( cd "$WINEPREFIX/drive_c/" ; rm -rf users ; cd windows ; mv ../../resources . ) || true
+# Removing any existing user data
+( cd "$WINEPREFIX" ; rm -rf users ) || true
 
 echo "disabled" > $WINEPREFIX/.update-timestamp
 
