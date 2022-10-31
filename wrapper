@@ -1,0 +1,119 @@
+# APP env
+progName="idm"
+progArch="-x86_64"
+progVer=
+progRealPath="$APPDIR/usr/share/$progName"
+progHome="$HOME/.$progName"
+progBin="IDMan.exe"
+progIcoD="$HOME/.local/share/applications/$progName.desktop"
+progReg="/tmp/$progName.reg"
+
+if [ -d "$APPDIR/winedata/.wine" ]; then
+# env used by unionfs-fuse
+# WINEPREFIX in the AppDir
+RO_WINEPREFIX="$APPDIR/winedata/.wine"
+MNT_WINEPREFIX="$progHome/.wine"
+RW_WINEPREFIX_OVERLAY=/tmp/."${progName}".unionfs
+else
+# WINE env
+export WINEARCH=${WINEARCH:-"win32"}
+export WINEPREFIX=${WINEPREFIX:-"$progHome/.wine"}
+export WINEDLLOVERRIDES=${WINEDLLOVERRIDES:-"mscoree,mshtml="}
+export WINEDEBUG=${WINEDEBUG:-"fixme-all"}
+fi
+export WINELOADER=${WINELOADER:-"$APPDIR/opt/wine-stable/bin/wine"}
+
+# DXVK env
+export DXVK_HUD=${DXVK_HUD:-"0"}
+export DXVK_LOG_LEVEL=${DXVK_LOG_LEVEL:-"none"}
+export DXVK_STATE_CACHE=${DXVK_STATE_CACHE:-"0"}
+export DXVK_CONFIG_FILE=${DXVK_CONFIG_FILE:-"$progHome/dxvk.conf"}
+
+if [ ! -d "$progHome" ];then
+mkdir -p "$progHome" || exit 1
+fi
+
+# Delete broken symlinks
+find -L "$progHome/" -maxdepth 2 -type l -delete &>/dev/null
+# Update existing symlinks, add new symlinks
+cp -urs "$progRealPath/"* "$progHome" 2> /dev/null
+
+# Load bundled WINEPREFIX if existing and if $WINEPREFIX is not set
+if [ -d "$APPDIR/winedata/.wine" ] && [ -z "$WINEPREFIX" ] ; then
+  mkdir -p "$MNT_WINEPREFIX" "$RW_WINEPREFIX_OVERLAY"
+  if [ ! -e "$MNT_WINEPREFIX/drive_c" ] ; then
+    unionfs-fuse -o use_ino,uid=$UID -ocow "$RW_WINEPREFIX_OVERLAY"=RW:"$RO_WINEPREFIX"=RO "$MNT_WINEPREFIX" || exit 1
+    trap atexit EXIT
+  fi
+  export WINEPREFIX="$MNT_WINEPREFIX" WINEDLLOVERRIDES="mscoree,mshtml=" WINEDEBUG=fixme-all WINEARCH="win32"
+elif [ ! -d "$APPDIR/winedata/.wine" ] && [ ! -d "$WINEPREFIX" ]; then
+# copy WINE light blue theme to WINEPREFIX
+# $WINELOADER wineboot -i
+
+# link ttf & ttc fonts from root to wineprefix
+mkdir -p "$WINEPREFIX"/drive_c/windows/Fonts
+find /usr/share/fonts/ -type f \( -name "*.ttf" -o -name "*.ttc" \) -exec ln -vs "{}" "$WINEPREFIX"/drive_c/windows/Fonts/ \; &>/dev/null
+
+cat > $progReg <<'EOF'
+Windows Registry Editor Version 5.00
+
+[HKEY_CURRENT_USER\Software\DownloadManager]
+"RunIEMonitor"=dword:00000000
+"StEnableBFEMsg"=dword:00000000
+"LaunchOnStart"=dword:00000000
+"TipFilePos"=dword:000001b9
+"TipStartUp"=dword:00000001
+
+[HKEY_CLASSES_ROOT\folder\shell\open\command]
+@="\"C:\\windows\\system32\\winebrowser.exe\" -nohome \"%1\""
+
+[-HKEY_CLASSES_ROOT\folder\shell\open\ddeexec]
+EOF
+$WINELOADER regedit $progReg
+sleep 1
+rm $progReg &>/dev/null
+
+fi
+
+dkico() {
+if [[ ! -f $progIcoD ]]; then
+
+cp -r "$APPDIR"/usr/share/icons "$HOME"/.local/share
+mkdir -p "$HOME/.local/share/applications"
+DesktopFilePath="$HOME/.local/share/applications/$progName.desktop"
+
+{ 
+echo "[Desktop Entry]
+Type=Application
+Name=Internet Download Manager
+GenericName=Download Manager
+Encoding=UTF-8
+Version=$progVer
+Icon=$progName
+Exec=${OWD}/${progName}_${progVer}${progArch}.AppImage %F
+Categories=Network;
+Terminal=false
+StartupWMClass=$progBin
+Keywords=idm,download"
+} >> "$DesktopFilePath"
+
+fi
+}
+
+
+# Launch wineboot/winecfg/winetricks if requested.
+# If the executable exists then launch it.
+case "$1" in
+  "install")
+    dkico
+    ;;
+  "winetricks")
+    winetricks "$2" "$3"
+    ;;
+  "msiexec"|"notepad"|"regedit"|"regsvr32"|"wineboot"|"winecfg"|"wineconsole"|"winedbg"|"winefile"|"winemine"|"winepath")
+    "$WINELOADER" "$1"
+    ;;
+  *)
+    "$WINELOADER" "$progHome/$progBin" "$1" "$2" 2>/dev/null
+    ;;
+esac

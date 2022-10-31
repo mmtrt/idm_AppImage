@@ -30,6 +30,10 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
+      # Set IDM_VER
+      - name: Run version script
+        run: echo "IDM_VER=$(wget "https://www.internetdownloadmanager.com/download.html" -qO- 2>&1 | grep -Po '=id.*[0-9]' | sed -r 's|=idman||;s|build||;s/./&./1;s/./&./4;s/./&./10')" >> $GITHUB_ENV
+
       # Runs a set of commands using the runners shell
       - name: Run a single-line script
         run: xvfb-run --server-args="-screen 0 1024x768x24" bash deploy.sh stable
@@ -48,6 +52,10 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+
+      # Set IDM_VER
+      - name: Run version script
+        run: echo "IDM_VER=$(wget "https://www.internetdownloadmanager.com/download.html" -qO- 2>&1 | grep -Po '=id.*[0-9]' | sed -r 's|=idman||;s|build||;s/./&./1;s/./&./4;s/./&./10')_WP" >> $GITHUB_ENV
 
       # Runs a set of commands using the runners shell
       - name: Run a single-line script
