@@ -9,17 +9,17 @@ progIcoD="$HOME/.local/share/applications/$progName.desktop"
 progReg="/tmp/$progName.reg"
 
 if [ -d "$APPDIR/winedata/.wine" ]; then
-# env used by unionfs-fuse
-# WINEPREFIX in the AppDir
-RO_WINEPREFIX="$APPDIR/winedata/.wine"
-MNT_WINEPREFIX="$progHome/.wine"
-RW_WINEPREFIX_OVERLAY=/tmp/."${progName}".unionfs
+  # env used by unionfs-fuse
+  # WINEPREFIX in the AppDir
+  RO_WINEPREFIX="$APPDIR/winedata/.wine"
+  RW_WINEPREFIX="$progHome/.wine"
+  MNT_WINEPREFIX=/tmp/."${progName}".unionfs
 else
-# WINE env
-export WINEARCH=${WINEARCH:-"win32"}
-export WINEPREFIX=${WINEPREFIX:-"$progHome/.wine"}
-export WINEDLLOVERRIDES=${WINEDLLOVERRIDES:-"mscoree,mshtml="}
-export WINEDEBUG=${WINEDEBUG:-"fixme-all"}
+  # WINE env
+  export WINEARCH=${WINEARCH:-"win32"}
+  export WINEPREFIX=${WINEPREFIX:-"$progHome/.wine"}
+  export WINEDLLOVERRIDES=${WINEDLLOVERRIDES:-"mscoree,mshtml="}
+  export WINEDEBUG=${WINEDEBUG:-"fixme-all"}
 fi
 export WINELOADER=${WINELOADER:-"$APPDIR/opt/wine-stable/bin/wine"}
 
@@ -30,7 +30,7 @@ export DXVK_STATE_CACHE=${DXVK_STATE_CACHE:-"0"}
 export DXVK_CONFIG_FILE=${DXVK_CONFIG_FILE:-"$progHome/dxvk.conf"}
 
 if [ ! -d "$progHome" ];then
-mkdir -p "$progHome" || exit 1
+  mkdir -p "$progHome" || exit 1
 fi
 
 # Delete broken symlinks
