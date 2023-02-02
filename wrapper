@@ -30,7 +30,7 @@ export DXVK_STATE_CACHE=${DXVK_STATE_CACHE:-"0"}
 export DXVK_CONFIG_FILE=${DXVK_CONFIG_FILE:-"$progHome/dxvk.conf"}
 
 if [ ! -d "$progHome" ];then
-  mkdir -p "$progHome" || exit 1
+  mkdir -p "$progHome" &>/dev/null || exit 1
 fi
 
 # Delete broken symlinks
@@ -40,7 +40,7 @@ cp -urs "$progRealPath/"* "$progHome" 2> /dev/null
 
 # Load bundled WINEPREFIX if existing and if $WINEPREFIX is not set
 if [ -d "$APPDIR/winedata/.wine" ] && [ -z "$WINEPREFIX" ] ; then
-  mkdir -p "$MNT_WINEPREFIX" "$RW_WINEPREFIX_OVERLAY"
+  mkdir -p "$MNT_WINEPREFIX" "$RW_WINEPREFIX_OVERLAY" &>/dev/null
   if [ ! -e "$MNT_WINEPREFIX/drive_c" ] ; then
     unionfs-fuse -o use_ino,uid=$UID -ocow "$RW_WINEPREFIX_OVERLAY"=RW:"$RO_WINEPREFIX"=RO "$MNT_WINEPREFIX" || exit 1
     trap atexit EXIT
@@ -51,7 +51,7 @@ elif [ ! -d "$APPDIR/winedata/.wine" ]; then
 # $WINELOADER wineboot -i
 
 # link ttf & ttc fonts from root to wineprefix
-mkdir -p "$WINEPREFIX"/drive_c/windows/Fonts
+mkdir -p "$WINEPREFIX"/drive_c/windows/Fonts &>/dev/null
 find /usr/share/fonts/ -type f \( -name "*.ttf" -o -name "*.ttc" \) -exec ln -vs "{}" "$WINEPREFIX"/drive_c/windows/Fonts/ \; &>/dev/null
 
 cat > $progReg <<'EOF'
@@ -79,7 +79,7 @@ dkico() {
 if [[ ! -f $progIcoD ]]; then
 
 cp -r "$APPDIR"/usr/share/icons "$HOME"/.local/share
-mkdir -p "$HOME/.local/share/applications"
+mkdir -p "$HOME/.local/share/applications" &>/dev/null
 DesktopFilePath="$HOME/.local/share/applications/$progName.desktop"
 
 { 
