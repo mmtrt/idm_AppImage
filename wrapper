@@ -40,9 +40,9 @@ cp -urs "$progRealPath/"* "$progHome" 2> /dev/null
 
 # Load bundled WINEPREFIX if existing and if $WINEPREFIX is not set
 if [ -d "$APPDIR/winedata/.wine" ] && [ -z "$WINEPREFIX" ] ; then
-  mkdir -p "$MNT_WINEPREFIX" "$RW_WINEPREFIX_OVERLAY" &>/dev/null
+  mkdir -p "$MNT_WINEPREFIX" "$RW_WINEPREFIX" &>/dev/null
   if [ ! -e "$MNT_WINEPREFIX/drive_c" ] ; then
-    unionfs-fuse -o use_ino,uid=$UID -ocow "$RW_WINEPREFIX_OVERLAY"=RW:"$RO_WINEPREFIX"=RO "$MNT_WINEPREFIX" || exit 1
+    unionfs-fuse -o use_ino,uid=$UID -ocow "$RW_WINEPREFIX"=RW:"$RO_WINEPREFIX"=RO "$MNT_WINEPREFIX" || exit 1
     trap atexit EXIT
   fi
   export WINEPREFIX="$MNT_WINEPREFIX" WINEDLLOVERRIDES="mscoree,mshtml=" WINEDEBUG=fixme-all WINEARCH="win32"
@@ -105,7 +105,7 @@ atexit ()
   while pgrep -f "$progHome/$progBin" ; do sleep 1 ; done
   pkill -f "unionfs-fuse"
   sleep 1
-  rm -r "$MNT_WINEPREFIX" # "$RW_WINEPREFIX_OVERLAY"
+  rm -r "$MNT_WINEPREFIX" # "$RW_WINEPREFIX"
 }
 
 # Launch wineboot/winecfg/winetricks if requested.
