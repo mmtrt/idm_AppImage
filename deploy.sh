@@ -7,7 +7,17 @@ export WINEARCH="win32"
 export WINEPREFIX="/home/runner/.wine"
 export WINEDEBUG="-all"
 
-wget -q "https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.3/appimage-builder-1.0.3-x86_64.AppImage" -O builder ; chmod +x builder
+wget -q "https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.3/appimage-builder-1.0.3-x86_64.AppImage" -O builder ; chmod +x builder ; ./builder --appimage-extract &>/dev/null
+
+# add custom mksquashfs
+wget -q "https://github.com/mmtrt/WINE_AppImage/raw/master/runtime/mksquashfs" -O squashfs-root/usr/bin/mksquashfs
+
+# force zstd format in appimagebuilder for appimages
+rm builder ; sed -i 's|xz|zstd|' squashfs-root/usr/lib/python3.8/site-packages/appimagebuilder/modules/prime/appimage_primer.py
+
+# Add static appimage runtime
+mkdir -p appimage-build/prime
+wget -q "https://github.com/mmtrt/WINE_AppImage/raw/master/runtime/runtime-x86_64" -O appimage-build/prime/runtime-x86_64
 
 wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/continuous-stable-4-i386/wine-stable-i386_4.0.4-x86_64.AppImage
 chmod +x *.AppImage ; mv wine-stable-i386_4.0.4-x86_64.AppImage wine-stable.AppImage
@@ -32,7 +42,7 @@ mv "$WINEPREFIX/drive_c/Program Files/Internet Download Manager" AppDir/usr/shar
 find "AppDir/usr/share/idm" -type d -execdir chmod 755 {} +
 rm -rf "$WINEPREFIX" "*.exe"
 
-./builder --recipe idm.yml
+./squashfs-root/AppRun --recipe idm.yml
 
 }
 
@@ -47,7 +57,17 @@ wget -q "https://github.com/mmtrt/sommelier-core/raw/tmp/themes/light/light.msst
 
 wget -q "https://gist.github.com/mmtrt/895168bd77a0a68be19788734fb31870/raw/f119ce7f5469e9f0fd0bbfa908c4c39d721187ff/idm.reg"
 
-wget -q "https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.3/appimage-builder-1.0.3-x86_64.AppImage" -O builder ; chmod +x builder
+wget -q "https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.3/appimage-builder-1.0.3-x86_64.AppImage" -O builder ; chmod +x builder ; ./builder --appimage-extract &>/dev/null
+
+# add custom mksquashfs
+wget -q "https://github.com/mmtrt/WINE_AppImage/raw/master/runtime/mksquashfs" -O squashfs-root/usr/bin/mksquashfs
+
+# force zstd format in appimagebuilder for appimages
+rm builder ; sed -i 's|xz|zstd|' squashfs-root/usr/lib/python3.8/site-packages/appimagebuilder/modules/prime/appimage_primer.py
+
+# Add static appimage runtime
+mkdir -p appimage-build/prime
+wget -q "https://github.com/mmtrt/WINE_AppImage/raw/master/runtime/runtime-x86_64" -O appimage-build/prime/runtime-x86_64
 
 wget -q https://github.com/mmtrt/WINE_AppImage/releases/download/continuous-stable-4-i386/wine-stable-i386_4.0.4-x86_64.AppImage
 chmod +x *.AppImage ; mv wine-stable-i386_4.0.4-x86_64.AppImage wine-stable.AppImage
@@ -87,7 +107,7 @@ sed -i "8d" idm.yml
 
 sed -i 's/stable|/stable-wp|/' idm.yml
 
-./builder --recipe idm.yml
+./squashfs-root/AppRun --recipe idm.yml
 
 }
 
